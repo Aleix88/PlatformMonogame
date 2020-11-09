@@ -67,11 +67,7 @@ namespace InputGames
         private void UpdateFrame() {
 
             if (keyframes[currentKeyFrame].frameNumber == currentFrame) {
-                int spriteFrame = keyframes[currentKeyFrame].spriteFrame;
-                int spriteIndex = isMirroed ? spriteFrame + mirrorOffset : spriteFrame;
-                this.SpriteY = (int)((float)spriteIndex / (float)Columns);
-                this.SpriteX = spriteIndex % Columns;
-                currentKeyFrame++;
+                loadSpriteFrame();
             }
 
             if (currentKeyFrame >= keyframes.Count)
@@ -84,11 +80,18 @@ namespace InputGames
             }
         }
 
+        private void loadSpriteFrame() {
+            int spriteFrame = keyframes[currentKeyFrame].spriteFrame;
+            int spriteIndex = isMirroed ? spriteFrame + mirrorOffset : spriteFrame;
+            this.SpriteY = (int)((float)spriteIndex / (float)Columns);
+            this.SpriteX = spriteIndex % Columns;
+            currentKeyFrame++;
+        }
+
         public void resetFrames() {
-            this.currentFrame = 0;
+            this.currentFrame = this.keyframes[0].frameNumber;
             this.currentKeyFrame = 0;
-            this.SpriteX = 0;
-            this.SpriteY = 0;
+            loadSpriteFrame();
             this.timer.resetTimer();
         }
 

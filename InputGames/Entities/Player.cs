@@ -6,6 +6,7 @@ using System.Text;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using InputGames.Animation;
+using System.Diagnostics;
 
 namespace InputGames
 {
@@ -16,10 +17,11 @@ namespace InputGames
         private List<Texture2D> textures;
         private Animator animator;
         private Input input;
-        private Vector2 position;
         private State state = State.idle;
 
-        public float velocity = 1;
+        public Vector2 position { get; private set; }
+
+        public float velocity = 4;
         public float jumpForce = 1;
 
         public Player(List<Texture2D> textures, Input input, Vector2 initialPosition) : base()
@@ -38,7 +40,7 @@ namespace InputGames
 
         private void initializeAnimations() {
             
-            AnimatedSprite idle = new AnimatedSprite(this.textures[(int)State.idle], 1, 6, new List<Animation.KeyFrame>() {
+            AnimatedSprite idle = new AnimatedSprite(this.textures[(int)State.idle], 2, 6, new List<Animation.KeyFrame>() {
                 new Animation.KeyFrame(0, 0),
                 new Animation.KeyFrame(1, 5),
                 new Animation.KeyFrame(2, 10),
@@ -46,16 +48,16 @@ namespace InputGames
                 new Animation.KeyFrame(4, 20),
                 new Animation.KeyFrame(5, 25),
                 new Animation.KeyFrame(5, 30)
-            }, 0);
-            AnimatedSprite run = new AnimatedSprite(this.textures[(int)State.running], 1, 6, new List<Animation.KeyFrame>() {
+            }, 6);
+            AnimatedSprite run = new AnimatedSprite(this.textures[(int)State.running], 2, 6, new List<Animation.KeyFrame>() {
                 new Animation.KeyFrame(1, 0),
-                new Animation.KeyFrame(2, 5),
-                new Animation.KeyFrame(3, 10),
-                new Animation.KeyFrame(4, 15),
-                new Animation.KeyFrame(5, 20),
-                new Animation.KeyFrame(0, 25),
-                new Animation.KeyFrame(0, 30)
-            }, 0);
+                new Animation.KeyFrame(2, 2),
+                new Animation.KeyFrame(3, 4),
+                new Animation.KeyFrame(4, 6),
+                new Animation.KeyFrame(5, 8),
+                new Animation.KeyFrame(0, 10),
+                new Animation.KeyFrame(0, 12)
+            }, 6);
 
             this.animator = new Animator(
                 new Dictionary<int, AnimatedSprite>()
@@ -64,6 +66,8 @@ namespace InputGames
                     { (int)State.running, run }
                 }
             );
+
+            this.animator.setScaleFactor(4);
 
             this.components.Add(this.animator);
         }
@@ -74,13 +78,13 @@ namespace InputGames
             if (state.IsKeyDown(input.Left))
             {
                 this.state = State.running;
-                position.X -= velocity;
+                position = new Vector2(position.X - velocity, position.Y);
                 this.animator.mirror(true);
             }
             else if (state.IsKeyDown(input.Right))
             {
                 this.state = State.running;
-                position.X += velocity;
+                position = new Vector2(position.X + velocity, position.Y);
                 this.animator.mirror(false);
             }
             else {

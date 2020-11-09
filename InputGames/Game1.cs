@@ -64,7 +64,7 @@ namespace InputGames
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             //transformMatrix: camera.transformMatrix
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
             foreach (Component component in components)
             {

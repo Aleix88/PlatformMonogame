@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace InputGames.Animation
@@ -13,6 +14,7 @@ namespace InputGames.Animation
         private Dictionary<int, AnimatedSprite> animations;
         private int currentState;
         private int oldState;
+        private bool isMirroed = false;
         public Vector2 position;
 
         public Animator(Dictionary<int, AnimatedSprite> animations):base()
@@ -47,8 +49,19 @@ namespace InputGames.Animation
         }
 
         public void mirror(bool isMirroed) {
-            foreach (KeyValuePair<int, AnimatedSprite> entry in animations) {
-                entry.Value.isMirroed = isMirroed;
+            if (this.isMirroed != isMirroed) {
+                this.isMirroed = isMirroed;
+                foreach (KeyValuePair<int, AnimatedSprite> entry in animations) {
+                    entry.Value.isMirroed = isMirroed;
+                    entry.Value.resetFrames();
+                }
+            }
+        }
+
+        public void setScaleFactor(float scaleFactor) {
+            foreach (KeyValuePair<int, AnimatedSprite> entry in animations)
+            {
+                entry.Value.scaleFactor = scaleFactor;
             }
         }
     }
